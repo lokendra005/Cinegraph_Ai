@@ -1,0 +1,33 @@
+# Local demo: uses backend/.env.example (no API keys). For LLM in containers, copy to backend/.env
+# and set env_file to ./backend/.env (see README).
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: cinegraph-backend
+    env_file:
+      - ./backend/.env.example
+    environment:
+      DATABASE_URL: sqlite:////app/data/cinegraph.db
+      OUTPUTS_DIR: /app/outputs
+      CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/data:/app/data
+      - ./backend/outputs:/app/outputs
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: cinegraph-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      backend:
+        condition: service_healthy

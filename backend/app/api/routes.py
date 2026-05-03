@@ -20,7 +20,12 @@ from app.schemas.api import (
     StoryCreateResponse,
     StoryRegenerateResponse,
 )
-from app.services.video_render import SceneFilmInput, build_cinematic_story_video, build_single_scene_film
+from app.services.video_render import (
+    SceneFilmInput,
+    build_cinematic_story_video,
+    build_single_scene_film,
+    build_storyboard_video,
+)
 
 router = APIRouter(prefix="/api/v1", tags=["stories"])
 
@@ -239,7 +244,29 @@ def generate_story_video(story_id: str, db: Session = Depends(get_db)) -> dict[s
     inputs = [_scene_film_input(story, s, db) for s in scenes]
     rel = f"{story_id}/storyboard_video.mp4"
     out_path = settings.outputs_dir / rel
-    written = build_cinematic_story_video(inputs, out_path)
+    # Use a lighter profile in hosted environments to avoid request timeout on free-tier CPUs.
+    try:
+        written = build_cinematic_story_video(
+            inputs,
+            out_path,
+            fps=12,
+            width=854,
+            height=480,
+            inter_scene_black_seconds=0.2,
+        )
+    except Exception:
+        # Fallback to simpler storyboard animation if cinematic render backend is unavailable.
+        frame_paths: list[Path] = []
+        for inp in inputs:
+            frame_paths.extend([p for p in inp.frame_paths if p.exists()])
+        written = build_storyboard_video(
+            frame_paths,
+            out_path,
+            fps=10,
+            seconds_per_frame=0.9,
+            width=854,
+            height=480,
+        )
     return {
         "story_id": story_id,
         "video_url": f"/outputs/{rel}",
@@ -283,7 +310,17 @@ def generate_scene_video(story_id: str, scene_id: str, db: Session = Depends(get
         raise HTTPException(status_code=400, detail="No storyboard frames for this scene")
     rel = _scene_film_rel(story_id, scene.scene_number)
     out_path = settings.outputs_dir / rel
-    written = build_single_scene_film(inp, out_path)
+    try:
+        written = build_single_scene_film(inp, out_path, fps=12, width=854, height=480)
+    except Exception:
+        written = build_storyboard_video(
+            [p for p in inp.frame_paths if p.exists()],
+            out_path,
+            fps=10,
+            seconds_per_frame=0.8,
+            width=854,
+            height=480,
+        )
     return {
         "story_id": story_id,
         "scene_id": scene.id,

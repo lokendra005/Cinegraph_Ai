@@ -75,11 +75,9 @@ export function App() {
   const [storyId, setStoryId] = useState<string | null>(null);
   const [jobId, setJobId] = useState<string | null>(null);
   const [job, setJob] = useState<JobResp | null>(null);
-  const [jobHistory, setJobHistory] = useState<JobResp[]>([]);
   const [story, setStory] = useState<StoryResp | null>(null);
   const [scenes, setScenes] = useState<unknown[]>([]);
   const [storyboard, setStoryboard] = useState<unknown | null>(null);
-  const [trace, setTrace] = useState<unknown | null>(null);
   const [evaluation, setEvaluation] = useState<unknown | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
@@ -98,17 +96,13 @@ export function App() {
       fetch(`/api/v1/stories/${id}`).then((r) => r.json()),
       fetch(`/api/v1/stories/${id}/scenes`).then((r) => r.json()),
       fetch(`/api/v1/stories/${id}/storyboard`).then((r) => r.json()),
-      fetch(`/api/v1/stories/${id}/trace`).then((r) => r.json()),
       fetch(`/api/v1/stories/${id}/evaluation`).then((r) => r.json()),
-      fetch(`/api/v1/stories/${id}/jobs`).then((r) => r.json()),
     ] as const;
     const all = jId
       ? [...requests, fetch(`/api/v1/jobs/${jId}`).then((r) => r.json())]
       : requests;
-    const [s, sc, sb, tr, ev, jobs, j] = (await Promise.all(all)) as [
+    const [s, sc, sb, ev, j] = (await Promise.all(all)) as [
       StoryResp,
-      unknown,
-      unknown,
       unknown,
       unknown,
       unknown,
@@ -117,9 +111,7 @@ export function App() {
     setStory(s);
     setScenes(Array.isArray(sc) ? sc : []);
     setStoryboard(sb);
-    setTrace(tr);
     setEvaluation(ev);
-    setJobHistory(Array.isArray(jobs) ? (jobs as JobResp[]) : []);
     if (j) setJob(j);
     try {
       const vr = (await fetch(`/api/v1/stories/${id}/video`).then((r) => r.json())) as {
@@ -404,19 +396,6 @@ export function App() {
             </button>
           </div>
         )}
-        {jobHistory.length > 0 && (
-          <div style={{ marginTop: "0.75rem" }}>
-            <label style={{ marginBottom: "0.5rem" }}>Job history</label>
-            <div className="trace" style={{ maxHeight: "180px" }}>
-              {jobHistory.map((j) => (
-                <div key={j.id} style={{ marginBottom: "0.35rem" }}>
-                  {j.id.slice(0, 8)}… · {j.status} · attempts {j.attempts}/{j.max_attempts}
-                  {j.last_error ? ` · ${j.last_error}` : ""}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
 
       {metrics && (
@@ -611,13 +590,6 @@ export function App() {
             </div>
           </div>
         )}
-
-      {trace && (
-        <div className="panel">
-          <h2>Agent trace</h2>
-          <pre className="trace">{JSON.stringify(trace, null, 2)}</pre>
-        </div>
-      )}
 
       {selectedFrame && (
         <div className="modal-backdrop" onClick={() => setSelectedFrame(null)}>

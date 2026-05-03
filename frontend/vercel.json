@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://cinegraph-ai.onrender.com/api/:path*"
+    },
+    {
+      "source": "/outputs/:path*",
+      "destination": "https://cinegraph-ai.onrender.com/outputs/:path*"
+    }
+  ]
+}

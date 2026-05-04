@@ -181,4 +181,4 @@ For setup, tests, and deployment details, see the repository **README** and **DE
 
 ---
 
-*End of submission document (Markdown source). Generate PDF via `scripts/generate_submission_pdf.py` or print this file to PDF from your editor.*
+*End of submission document (Markdown source). Export to PDF from your editor or browser print-to-PDF if needed.*

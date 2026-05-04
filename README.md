@@ -98,14 +98,9 @@ The suite includes offline pipeline determinism checks and HTTP tests for primar
 
 | Deliverable | Location |
 |-------------|----------|
-| Technical note + trade-offs + evaluator steps | `files/SUBMISSION_TECH_NOTE_AND_TEST_PLAN.md` |
-| Consolidated PRD (vision, agents, API, tests) | `files/CINEGRAPH_AI_FINAL_PRD.md` |
-| Demo video | Record locally: UI flow + trace + MP4 (checklist in submission doc) |
+| Written submission (architecture, tests, links, demo) | `files/CINEGRAPH_AI_TASK1_SUBMISSION_DOCUMENT.md` |
+| Demo video | [Loom](https://www.loom.com/share/032fb25afbd94c77b98777797a20aeed) (also linked in submission doc) |
 
 ## Deployment
 
 See **[DEPLOYMENT.md](DEPLOYMENT.md)** for environment variables, Postgres vs SQLite, CORS, static frontend + API rewrites (Vercel example), Docker notes, and troubleshooting.
-
-## Product docs
-
-See `files/CINEGRAPH_AI_FINAL_PRD.md` and `files/SUBMISSION_TECH_NOTE_AND_TEST_PLAN.md`.

@@ -177,7 +177,7 @@ CineGraph AI prioritizes:
 - **Reliable** demo path (offline heuristics + hosted LLM optional)  
 - **Assessment-aligned** outputs: script + visual plan + storyboard + **playable video**
 
-For technical depth, see also: `files/SUBMISSION_TECH_NOTE_AND_TEST_PLAN.md` and `files/CINEGRAPH_AI_FINAL_PRD.md`.
+For setup, tests, and deployment details, see the repository **README** and **DEPLOYMENT.md**.
 
 ---
 

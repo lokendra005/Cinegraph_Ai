@@ -184,4 +184,4 @@ Poll `job` until `completed`, then `GET .../storyboard` and open an `/outputs/..
 
 ---
 
-For product-level test stories and demo scripting, see `files/SUBMISSION_TECH_NOTE_AND_TEST_PLAN.md`.
+For predefined test stories and evaluator-facing narrative, see `files/CINEGRAPH_AI_TASK1_SUBMISSION_DOCUMENT.md`.

@@ -10,6 +10,8 @@ backend/data/
 backend/outputs/
 frontend/node_modules/
 frontend/dist/
+frontend/tsconfig.tsbuildinfo
+*.pdf
 .coverage
 htmlcov/
 .pytest_cache/
